@@ -15,19 +15,10 @@ con.connect(function(err){
     return;
   }
   console.log('line 17: Connection established');
-//   fs.readFile(__dirname + '/schema.sql', 'utf-8', function(err, data){
-//   console.log("line 19")  
-//   var commands = data.split(";");
-//   commands.pop();
-//   commands.forEach(function(command){
-//     con.query(command, function(err, results){
-//       if (err){
-//         console.error(err);
-//       }
-//       //console.log("line 27", results) 
-//     })
-//   })
-// })
+  fs.readFile(__dirname + '/schema.sql', 'utf-8', function(err, data){
+  console.log("line 19 data", data)  
+  })
+})
 
 // con.query('INSERT INTO CLIENT CONTACT (name, email, rating) VALUES (?, ?, ?)', ['Monica', 'monica.grandy@gmail.com', '5'], function(err, result) {
 //       if (err){
@@ -37,7 +28,7 @@ con.connect(function(err){
 //         console.log(result)
 //       }
 //   }); 
-});
+//});
 
 
 
