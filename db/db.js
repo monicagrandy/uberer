@@ -15,30 +15,19 @@ con.connect(function(err){
     return;
   }
   console.log('line 17: Connection established');
-  fs.readFile(__dirname + '/schema.sql', 'utf-8', function(err, data){
-  console.log("line 19 data", data)  
+  var schema = fs.readFile(__dirname + '/schema.sql', 'utf-8', function(err, data){
+    if(err){
+      console.log(err)
+    }
+    data = data.toString()
+    data = data.split(".")
+    data.forEach(function(table){
+      con.query(table);
+      console.log("here is a table: ", table)
+    })  
   })
 })
 
-// con.query('INSERT INTO CLIENT CONTACT (name, email, rating) VALUES (?, ?, ?)', ['Monica', 'monica.grandy@gmail.com', '5'], function(err, result) {
-//       if (err){
-//         throw err
-//       } 
-//       else {
-//         console.log(result)
-//       }
-//   }); 
-//});
-
-
-
-// setInterval(function () { con.query('SELECT 1') }, 5000)
-
-// con.end(function(err) {
-//   // The connection is terminated gracefully
-//   // Ensures all previously enqueued queries are still
-//   // before sending a COM_QUIT packet to the MySQL server.
-// });
 
 module.exports = con
 

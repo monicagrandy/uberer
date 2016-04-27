@@ -1,155 +1,96 @@
--- CREATE TABLE `ClientContact` (
--- 	`PK` BINARY NOT NULL,
--- 	`Name` BINARY NOT NULL AUTO_INCREMENT,
--- 	`Join Date` BINARY NOT NULL AUTO_INCREMENT,
--- 	`Phone` BINARY NOT NULL AUTO_INCREMENT,
--- 	`Email` BINARY NOT NULL AUTO_INCREMENT,
--- 	`Rating` BINARY NOT NULL AUTO_INCREMENT,
--- 	`Blocked` BINARY NOT NULL AUTO_INCREMENT,
--- 	`Billing` BINARY NOT NULL AUTO_INCREMENT,
--- 	PRIMARY KEY (`PK`)
--- );
+CREATE TABLE IF NOT EXISTS `ClientContact` (
+	`PK` INT NOT NULL AUTO_INCREMENT,
+	`Name` varchar(50),
+	`JoinDate` varchar(250),
+	`Phone` INT(50),
+	`Email` varchar(250),
+	`Rating` INT(10),
+	`Blocked` BOOLEAN,
+	`Billing` INT(10),
+	PRIMARY KEY (`PK`)
+);.
 
--- CREATE TABLE `DriverContact` (
--- 	`PK` BINARY NOT NULL,
--- 	`Name` BINARY NOT NULL AUTO_INCREMENT,
--- 	`Join Date` BINARY NOT NULL AUTO_INCREMENT,
--- 	`Phone` BINARY NOT NULL AUTO_INCREMENT,
--- 	`Email` BINARY NOT NULL AUTO_INCREMENT,
--- 	`Payroll` BINARY NOT NULL,
--- 	`Address` BINARY NOT NULL,
--- 	`Rating` BINARY NOT NULL,
--- 	PRIMARY KEY (`PK`)
--- );
+CREATE TABLE IF NOT EXISTS `DriverContact` (
+	`PK` INT NOT NULL AUTO_INCREMENT,
+	`Name` varchar(250),
+	`JoinDate` varchar(250),
+	`Phone` INT(50),
+	`Email` varchar(250),
+	`Payroll` INT(50),
+	`Address` varchar(500),
+	`Rating` INT (10),
+	PRIMARY KEY (`PK`)
+);.
 
-CREATE TABLE `Rides` (
-	`PK` BINARY NOT NULL,
-	`Date` BINARY NOT NULL,
-	`Distance` BINARY NOT NULL,
-	`Trip Cost` BINARY NOT NULL,
-	`Dispute` BINARY NOT NULL,
-	`Client` BINARY NOT NULL,
-	`Pool1` BINARY NOT NULL,
-	`Pool2` BINARY NOT NULL,
-	`Driver` BINARY NOT NULL
-);
+CREATE TABLE IF NOT EXISTS `Rides` (
+	`PK` INT NOT NULL AUTO_INCREMENT,
+	`Date` Varchar(250),
+	`Distance` FLOAT,
+	`TripCost` FLOAT,
+	`Dispute` INT(50),
+	`InitialClient` INT(50),
+	`Pool1` INT(50),
+	`Pool2` INT(50),
+	`TripDriver` INT(50),
+	PRIMARY KEY (`PK`)
+);.
 
--- CREATE TABLE `Disputes` (
--- 	`PK` BINARY NOT NULL,
--- 	`Ride` BINARY NOT NULL,
--- 	`Driver` BINARY NOT NULL AUTO_INCREMENT,
--- 	`Client` BINARY NOT NULL,
--- 	`Resolved` BINARY NOT NULL,
--- 	PRIMARY KEY (`PK`)
--- );
+CREATE TABLE IF NOT EXISTS `Disputes` (
+	`PK` INT NOT NULL AUTO_INCREMENT,
+	`Ride` INT(50),
+	`Driver` INT(50),
+	`Client` INT(50),
+	`Resolved` BOOLEAN,
+	PRIMARY KEY (`PK`)
+);.
 
--- CREATE TABLE `ClientBilling` (
--- 	`PK` BINARY NOT NULL AUTO_INCREMENT,
--- 	`Billing Address` BINARY NOT NULL,
--- 	`Acct Info` BINARY NOT NULL,
--- 	`Name` BINARY NOT NULL,
--- 	`Client` BINARY NOT NULL,
--- 	PRIMARY KEY (`PK`)
--- );
+CREATE TABLE IF NOT EXISTS `ClientBilling` (
+	`PK` INT NOT NULL AUTO_INCREMENT,
+	`BillingAddress` varchar(500),
+	`AcctInfo` INT(50),
+	`Name` varchar(250),
+	`ClientInfo` INT(50),
+	PRIMARY KEY (`PK`)
+);.
 
--- CREATE TABLE `DriverPayment` (
--- 	`PK` BINARY NOT NULL,
--- 	`Acct #` BINARY NOT NULL AUTO_INCREMENT,
--- 	`Current Pay Period` BINARY NOT NULL AUTO_INCREMENT,
--- 	`Total Gross` BINARY NOT NULL AUTO_INCREMENT,
--- 	`Total Net` BINARY NOT NULL AUTO_INCREMENT,
--- 	`Driver` BINARY NOT NULL AUTO_INCREMENT,
--- 	PRIMARY KEY (`PK`)
--- );
+CREATE TABLE IF NOT EXISTS `DriverPayment` (
+	`PK` INT NOT NULL AUTO_INCREMENT,
+	`AcctNumber` INT(50),
+	`CurrentPayPeriod` varchar(250),
+	`TotalGross` FLOAT,
+	`TotalNet` FLOAT,
+	`DriverInfo` INT(50),
+	PRIMARY KEY (`PK`)
+);.
 
--- ALTER TABLE `ClientContact` ADD CONSTRAINT `ClientContact_fk0` FOREIGN KEY (`Billing`) REFERENCES `ClientBilling`(`PK`);
+ALTER TABLE `ClientContact` ADD FOREIGN KEY (`Billing`) REFERENCES CLIENTBILLING(`PK`);.
 
--- ALTER TABLE `DriverContact` ADD CONSTRAINT `DriverContact_fk0` FOREIGN KEY (`Payroll`) REFERENCES `DriverPayment`(`PK`);
+ALTER TABLE `DriverContact` ADD FOREIGN KEY (`Payroll`) REFERENCES DRIVERPAYMENT(`PK`);.
 
--- ALTER TABLE `Rides` ADD CONSTRAINT `Rides_fk0` FOREIGN KEY (`Dispute`) REFERENCES `Disputes`(`PK`);
+ALTER TABLE `Rides` ADD FOREIGN KEY (`Dispute`) REFERENCES DISPUTES(`PK`);.
 
--- ALTER TABLE `Rides` ADD CONSTRAINT `Rides_fk1` FOREIGN KEY (`Client`) REFERENCES `ClientContact`(`PK`);
+ALTER TABLE `Rides` ADD FOREIGN KEY (`InitialClient`) REFERENCES CLIENTCONTACT(`PK`);.
 
--- ALTER TABLE `Rides` ADD CONSTRAINT `Rides_fk2` FOREIGN KEY (`Pool1`) REFERENCES `ClientContact`(`PK`);
+ALTER TABLE `Rides` ADD FOREIGN KEY (`Pool1`) REFERENCES CLIENTCONTACT(`PK`);.
 
--- ALTER TABLE `Rides` ADD CONSTRAINT `Rides_fk3` FOREIGN KEY (`Pool2`) REFERENCES `ClientContact`(`PK`);
+ALTER TABLE `Rides` ADD FOREIGN KEY (`Pool2`) REFERENCES CLIENTCONTACT(`PK`);.
 
--- ALTER TABLE `Rides` ADD CONSTRAINT `Rides_fk4` FOREIGN KEY (`Driver`) REFERENCES `DriverContact`(`PK`);
+ALTER TABLE `Rides` ADD FOREIGN KEY (`TripDriver`) REFERENCES DRIVERCONTACT(`PK`);.
 
--- ALTER TABLE `Disputes` ADD CONSTRAINT `Disputes_fk0` FOREIGN KEY (`Ride`) REFERENCES `Rides`(`PK`);
+ALTER TABLE `Disputes` ADD FOREIGN KEY (`Client`) REFERENCES CLIENTCONTACT(`PK`);.
 
--- ALTER TABLE `Disputes` ADD CONSTRAINT `Disputes_fk1` FOREIGN KEY (`Driver`) REFERENCES `DriverContact`(`PK`);
+ALTER TABLE `Disputes` ADD FOREIGN KEY (`Driver`) REFERENCES DRIVERCONTACT(`PK`);.
 
--- ALTER TABLE `Disputes` ADD CONSTRAINT `Disputes_fk2` FOREIGN KEY (`Client`) REFERENCES `ClientContact`(`PK`);
+ALTER TABLE `Disputes` ADD FOREIGN KEY (`Ride`) REFERENCES RIDES(`PK`);.
 
--- ALTER TABLE `ClientBilling` ADD CONSTRAINT `ClientBilling_fk0` FOREIGN KEY (`Client`) REFERENCES `ClientContact`(`PK`);
+ALTER TABLE `ClientBilling` ADD FOREIGN KEY (`ClientInfo`) REFERENCES CLIENTCONTACT(`PK`);.
 
--- ALTER TABLE `DriverPayment` ADD CONSTRAINT `DriverPayment_fk0` FOREIGN KEY (`Driver`) REFERENCES `DriverContact`(`PK`);
-
--- CREATE TABLE IF NOT EXISTS `CLIENT_CONTACT` (
--- 	`pk` INTEGER NOT NULL AUTO_INCREMENT ,
--- 	`name` VARCHAR(50) NULL DEFAULT NULL ,
--- 	`join date` VARCHAR(50) NULL DEFAULT NULL ,
--- 	`phone` VARCHAR(50) NULL DEFAULT NULL ,
--- 	`email` VARCHAR(50) NULL DEFAULT NULL ,
--- 	`username` VARCHAR(50) NULL DEFAULT NULL ,
--- 	`password` VARCHAR(50) NULL DEFAULT NULL ,
--- 	`rating` INTEGER(50) NULL DEFAULT NULL ,
--- 	`blocked` BOOLEAN NULL DEFAULT NULL ,
--- 	PRIMARY KEY (`pk`) ,
--- 	FOREIGN KEY (`billing`) REFERENCES CLIENT_BILLING(`pk`)
--- );
+ALTER TABLE `DriverPayment` ADD FOREIGN KEY (`DriverInfo`) REFERENCES DRIVERCONTACT(`PK`);
 
 
--- CREATE TABLE IF NOT EXISTS `DRIVER_CONTACT` (
--- 	`pk` INTEGER NOT NULL AUTO_INCREMENT ,
--- 	`name` VARCHAR(50) NULL DEFAULT NULL ,
--- 	`join date` VARCHAR(50) NULL DEFAULT NULL ,
--- 	`phone` VARCHAR(50) NULL DEFAULT NULL ,
--- 	`address` VARCHAR(50) NULL DEFAULT NULL ,
--- 	`rating` INTEGER NOT NULL ,
--- 	`email` VARCHAR(50) NULL DEFAULT NULL ,
--- 	 PRIMARY KEY (`pk`) ,
--- 	 FOREIGN KEY (`payroll`) REFERENCES DRIVER_PAYMENT(`pk`)
--- );
 
--- CREATE TABLE IF NOT EXISTS `RIDES` (
--- 	`pk` INTEGER NOT NULL AUTO_INCREMENT ,
--- 	`date` VARCHAR(50) NULL DEFAULT NULL , 
--- 	`distance` INTEGER NOT NULL ,
--- 	`trip Cost` INTEGER NOT NULL ,
--- 	FOREIGN KEY (`dispute`) REFERENCES DISPUTES(`pk`) ,
--- 	FOREIGN KEY (`client`) REFERENCES CLIENT_CONTACT(`pk`) ,
--- 	FOREIGN KEY (`pool1`) REFERENCES CLIENT_CONTACT(`pk`) ,
--- 	FOREIGN KEY (`pool2`) REFERENCES CLIENT_CONTACT(`pk`) ,
--- 	FOREIGN KEY (`driver`) REFERENCES DRIVER_CONTACT(`pk`)
--- );
 
--- CREATE TABLE IF NOT EXISTS `DISPUTES` (
--- 	`pk` INTEGER NOT NULL AUTO_INCREMENT ,
--- 	`filing date` VARCHAR(50) NULL DEFAULT NULL ,
--- 	`resolved` BOOLEAN NULL DEFAULT NULL ,
--- 	FOREIGN KEY (`ride`) REFERENCES RIDES(`pk`) ,
--- 	PRIMARY KEY (`pk`)
--- );
 
--- CREATE TABLE IF NOT EXISTS `CLIENT_BILLING` (
--- 	`pk` INTEGER NOT NULL AUTO_INCREMENT ,
--- 	`address` VARCHAR(50) NULL DEFAULT NULL ,
--- 	`Acct Info` VARCHAR(50) NULL DEFAULT NULL ,
--- 	FOREIGN KEY (`client`) REFERENCES CLIENT_CONTACT(`pk`) ,
--- 	PRIMARY KEY (`pk`)
--- );
-
--- CREATE TABLE IF NOT EXISTS `DRIVER_PAYMENT` (
--- 	`pk` INTEGER NOT NULL AUTO_INCREMENT ,
--- 	`Acct Info` VARCHAR(50) NULL DEFAULT NULL ,
--- 	`Current Pay Period` VARCHAR(50) NULL DEFAULT NULL ,
--- 	`Total Gross` INTEGER NOT NULL ,
--- 	`Total Net` INTEGER NOT NULL ,
--- 	FOREIGN KEY (`dirver`) REFERENCES DRIVER_CONTACT(`pk`) ,
--- 	PRIMARY KEY (`pk`)
--- );
 
 
 
